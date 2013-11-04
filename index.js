@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -225,7 +224,7 @@ function Collection(models, type) {
   };
 
   function _insert(model, index) {
-    models.splice(index, 0, ensureType(model));
+    models.splice(index, 0, model);
   }
 
   function _remove(index) {
