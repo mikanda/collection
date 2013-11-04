@@ -1,0 +1,19 @@
+{
+  "name": "collection",
+  "version": "0.0.0",
+  "description": "",
+  "main": "test/app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test/server.js"
+  },
+  "author": "mikanda IT Solutions <info@mikanda.de>",
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "express": "~3.4.4",
+    "jade": "~0.35.0",
+    "component-builder": "~0.10.0"
+  }
+}

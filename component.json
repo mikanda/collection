@@ -1,0 +1,22 @@
+{
+  "name": "collection",
+  "repo": "mikanda/collection",
+  "version": "0.0.0",
+  "dependencies": {
+    "component/bind": "0.0.1",
+    "component/enumerable": "0.3.1",
+    "component/emitter": "1.0.1",
+    "component/each": "0.1.0",
+    "mikanda/model": "*"
+  },
+  "development": {
+    "visionmedia/mocha": "*",
+    "chaijs/chai": "*",
+    "mikanda/model": "*"
+  },
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ],
+  "remotes": []
+}

@@ -1,0 +1,14 @@
+!!! 5
+html
+  head
+    meta(charset='UTF-8')
+    link(href='/build.css', rel='stylesheet')
+  body
+    #mocha
+    script(src='/build.js')
+    script.
+      require('mocha');
+      mocha.setup('bdd');
+    script(src='/collection.js')
+    script.
+      mocha.run();
