@@ -1,3 +1,4 @@
+
 /**
  * Module dependencies.
  */
@@ -224,7 +225,7 @@ function Collection(models, type) {
   };
 
   function _insert(model, index) {
-    models.splice(index, 0, model);
+    models.splice(index, 0, ensureType(model));
   }
 
   function _remove(index) {
@@ -243,11 +244,11 @@ function Collection(models, type) {
 
   function handleChange(name, value) {
     if (name == 'dirty') {
-      if (value == true) return self._dirty(1);
-      if (value == false) return self._dirty(-1);
+      if (value == true) return updateDirty(1);
+      if (value == false) return updateDirty(-1);
     }
     var args = [].slice.call(arguments, 1);
-    var index = self._models.indexOf(this);
+    var index = models.indexOf(this);
     name = 'items.' + index + '.' + name;
     args.unshift(name);
     args.unshift('change');
