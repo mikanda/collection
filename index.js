@@ -79,6 +79,7 @@ function Collection(models, type) {
   this.clear = clear;
   this.toJSON = toJSON;
   this.update = update;
+  this.use = use;
   this.__iterate__ = iterate;
 
   // ensure types of models
@@ -203,6 +204,14 @@ function Collection(models, type) {
       self.move(old, index);
     });
   };
+
+  /**
+   * Syntactic sugar to insert a plugin.
+   */
+
+  function use(fn) {
+    fn(this);
+  }
 
   /**
    * Satisfy iteration API.
