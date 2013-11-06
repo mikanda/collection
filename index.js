@@ -30,6 +30,8 @@ function Collection(models, type) {
 
   var self = this;
   var dirty = 0;
+  var added = [];
+  var removed = [];
   models = models || [];
 
   /**
@@ -98,7 +100,6 @@ function Collection(models, type) {
     _insert(model, index);
     bind(model);
     this.emit('insert', model, index);
-    updateDirty(1);
     return model;
   };
 
@@ -110,7 +111,6 @@ function Collection(models, type) {
     var model = _remove(index);
     unbind(model);
     this.emit('remove', index, model);
-    updateDirty(1);
     return model;
   };
 
@@ -142,6 +142,8 @@ function Collection(models, type) {
     this.each(function(child){
       child.resetDirty();
     });
+    added = [];
+    removed = [];
     dirty = 0;
     if (wasDirty) emitDirty(false, true);
   };
@@ -226,10 +228,25 @@ function Collection(models, type) {
 
   function _insert(model, index) {
     models.splice(index, 0, model);
+    if (~removed.indexOf(model)) {
+      removed.splice(removed.indexOf(model), 1);
+      updateDirty(-1);
+    } else {
+      added.push(model);
+      updateDirty(1);
+    }
   }
 
   function _remove(index) {
     var model = models.splice(index, 1)[0];
+    if (~added.indexOf(model)) {
+      added.splice(added.indexOf(model), 1);
+      updateDirty(-1);
+    } else {
+      // TODO save index were it was removed
+      removed.push(model);
+      updateDirty(1);
+    }
     return model;
   }
 

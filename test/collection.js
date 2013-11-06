@@ -44,6 +44,7 @@ describe('Collection', function(){
       expect(collection.items).to.eql([ secondUser, user ]);
       expect(collection.at(0)).to.equal(secondUser);
       expect(collection.at(1)).to.equal(user);
+      expect(collection.dirty).to.be.true;
       done();
     });
     it('should insert a new element with given type', function(done){
@@ -52,6 +53,7 @@ describe('Collection', function(){
       collection.insert({ name: 'Testuser' });
       expect(collection.at(0).name).to.equal('Testuser');
       expect(collection.at(0) instanceof User).to.be.true;
+      expect(collection.dirty).to.be.true;
       done();
     });
   });
@@ -104,6 +106,7 @@ describe('Collection', function(){
       collection.pop();
       expect(collection.length).to.equal(1);
       expect(collection.at(0)).to.equal(users[0]);
+      expect(collection.dirty).to.be.true;
     });
   });
   describe('.pin()', function(){
@@ -132,6 +135,16 @@ describe('Collection', function(){
       var user = new User({ name: 'Test' });
       var collection = new Collection([ user, user ]);
       expect(collection.toJSON()).to.eql([ user.toJSON(), user.toJSON() ]);
+    });
+  });
+  describe('resetting', function(){
+    it('should reset the dirty state after an resetting push', function(){
+      var user = new User({ name: 'Test user' });
+      var collection = new Collection([ user ]);
+      collection.pop();
+      expect(collection.dirty).to.be.true;
+      collection.push(user);
+      expect(collection.dirty).to.be.false;
     });
   });
 });
