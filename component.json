@@ -7,6 +7,7 @@
     "component/enumerable": "0.3.1",
     "component/emitter": "1.0.1",
     "component/each": "0.1.0",
+    "component/inherit": "0.0.2",
     "mikanda/model": "*"
   },
   "development": {

@@ -6,7 +6,8 @@
 var Enumerable = require('enumerable')
   , Emitter = require('emitter')
   , bind = require('bind')
-  , each = require('each');
+  , each = require('each')
+  , inherit = require('inherit');
 
 /**
  * Module exports.
@@ -87,7 +88,6 @@ function Collection(models, type) {
   this.clear = clear;
   this.toJSON = toJSON;
   this.update = update;
-  this.use = use;
   this.__iterate__ = iterate;
 
   // ensure types of models
@@ -214,15 +214,6 @@ function Collection(models, type) {
   };
 
   /**
-   * Syntactic sugar to insert a plugin.
-   */
-
-  function use(fn) {
-    fn(this);
-    return this;
-  }
-
-  /**
    * Satisfy iteration API.
    */
 
@@ -320,9 +311,21 @@ function Collection(models, type) {
  */
 
 Collection.type = function(type){
-  return function(models){
-    return new Collection(models, type);
-  };
+  function TypedCollection(models) {
+    Collection.call(this, models, type);
+  }
+  inherit(TypedCollection, Collection);
+  TypedCollection.use = Collection.use;
+  return TypedCollection;
+};
+
+/**
+ * Syntactic sugar to insert a plugin.
+ */
+
+Collection.use = function(fn){
+  fn(this);
+  return this;
 };
 
 // emitter mixin
