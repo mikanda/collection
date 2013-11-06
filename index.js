@@ -219,6 +219,7 @@ function Collection(models, type) {
 
   function use(fn) {
     fn(this);
+    return this;
   }
 
   /**
