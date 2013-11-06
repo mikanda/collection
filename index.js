@@ -240,6 +240,7 @@ function Collection(models, type) {
     if (~self.added.indexOf(model)) {
       self.added.splice(self.added.indexOf(model), 1);
       updateDirty(-1);
+      if (model.dirty) updateDirty(-1);
     } else {
       // TODO save index were it was removed
       self.removed.push(model);
