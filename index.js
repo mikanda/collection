@@ -30,8 +30,6 @@ function Collection(models, type) {
 
   var self = this;
   var dirty = 0;
-  var added = [];
-  var removed = [];
   models = models || [];
 
   /**
@@ -65,6 +63,14 @@ function Collection(models, type) {
   });
   Object.defineProperty(this, 'type', {
     value: type || null,
+    writable: false
+  });
+  Object.defineProperty(this, 'added', {
+    value: [],
+    writable: false
+  });
+  Object.defineProperty(this, 'removed', {
+    value: [],
     writable: false
   });
 
@@ -142,8 +148,8 @@ function Collection(models, type) {
     this.each(function(child){
       child.resetDirty();
     });
-    added = [];
-    removed = [];
+    this.added.length = [];
+    this.removed.length = [];
     dirty = 0;
     if (wasDirty) emitDirty(false, true);
   };
@@ -228,23 +234,23 @@ function Collection(models, type) {
 
   function _insert(model, index) {
     models.splice(index, 0, model);
-    if (~removed.indexOf(model)) {
-      removed.splice(removed.indexOf(model), 1);
+    if (~self.removed.indexOf(model)) {
+      self.removed.splice(self.removed.indexOf(model), 1);
       updateDirty(-1);
     } else {
-      added.push(model);
+      self.added.push(model);
       updateDirty(1);
     }
   }
 
   function _remove(index) {
     var model = models.splice(index, 1)[0];
-    if (~added.indexOf(model)) {
-      added.splice(added.indexOf(model), 1);
+    if (~self.added.indexOf(model)) {
+      self.added.splice(self.added.indexOf(model), 1);
       updateDirty(-1);
     } else {
       // TODO save index were it was removed
-      removed.push(model);
+      self.removed.push(model);
       updateDirty(1);
     }
     return model;
