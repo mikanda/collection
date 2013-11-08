@@ -186,6 +186,7 @@ function Collection(models, type) {
     });
     this.added.length = [];
     this.removed.length = [];
+    actions.length = 0;
     dirty = 0;
     if (wasDirty) emitDirty(false, true);
   };
