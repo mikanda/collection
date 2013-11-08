@@ -152,8 +152,10 @@ describe('Collection', function(){
       collection.move(2, 3);
       collection.move(1, 2);
       collection.remove(0);
-      console.log(collection.toJSON());
+      collection.at(1).name = 'tut';
+      expect(collection.dirty).to.equal(true);
       collection.reset();
+      expect(collection.dirty).to.equal(false);
       expect(collection.toJSON()).to.eql([ { name: 'initial 1' }, { name: 'initial 2' } ]);
     });
   });

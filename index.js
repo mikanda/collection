@@ -158,9 +158,19 @@ function Collection(models, type) {
 
   function reset() {
     silent = true;
-    for (var action; actions.length > 0;) {
-      action = actions.pop();
-      this[action.method].apply(this, action.args);
+    try {
+      for (var action; actions.length > 0;) {
+        action = actions.pop();
+        this[action.method].apply(this, action.args);
+      }
+      this.each(function(model){
+        model.reset();
+      });
+    } catch (e) {
+
+      // be sure that silent is reset
+      silent = false;
+      throw e;
     }
     silent = false;
   }
