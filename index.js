@@ -31,6 +31,15 @@ function Collection(models, type) {
 
   var self = this;
   var dirty = 0;
+
+  // flag temporarily set by .reset() to indicate that no actions
+  // should be generated
+  //
+  // TODO: turn this into something less ugly
+  var silent = false;
+
+  // track actions on the collection to be able to reset it
+  var actions = [];
   models = models || [];
 
   /**
@@ -84,6 +93,7 @@ function Collection(models, type) {
   this.move = move;
   this.push = push;
   this.pop = pop;
+  this.reset = reset;
   this.pin = this.resetDirty = pin;
   this.clear = clear;
   this.toJSON = toJSON;
@@ -103,6 +113,7 @@ function Collection(models, type) {
 
   function insert(model, index) {
     model = ensureType(model);
+    action('remove', [ index ]);
     _insert(model, index);
     bind(model);
     this.emit('insert', model, index);
@@ -115,6 +126,7 @@ function Collection(models, type) {
 
   function remove(index) {
     var model = _remove(index);
+    action('insert', [ model, index ]);
     unbind(model);
     this.emit('remove', index, model);
     return model;
@@ -122,6 +134,7 @@ function Collection(models, type) {
 
   function move(from, to) {
     if (from === to) return;
+    action('move', [ to, from ]);
     var model = _remove(from);
     _insert(model, to);
     this.emit('move', from, to);
@@ -138,6 +151,19 @@ function Collection(models, type) {
     var index = this.length - 1;
     return this.remove(index);
   };
+
+  /**
+   * Reset the collection to its original state.
+   */
+
+  function reset() {
+    silent = true;
+    for (var action; actions.length > 0;) {
+      action = actions.pop();
+      this[action.method].apply(this, action.args);
+    }
+    silent = false;
+  }
 
   /**
    * Pin the collection to the current state.
@@ -160,7 +186,9 @@ function Collection(models, type) {
 
   function clear() {
     models.length = 0;
-    this.emit('clear');
+    this.each(function(model){
+      self.remove(self.indexOf(model));
+    });
     return this;
   };
 
@@ -223,6 +251,11 @@ function Collection(models, type) {
       get: function(i){ return models[i]; }
     };
   };
+
+  function action(method, args) {
+    if (silent) return;
+    actions.push({ method: method, args: args });
+  }
 
   function _insert(model, index) {
     models.splice(index, 0, model);

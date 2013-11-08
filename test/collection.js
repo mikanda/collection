@@ -87,6 +87,10 @@ describe('Collection', function(){
       expect(collection.at(0)).to.equal(users[1]);
       expect(collection.at(1)).to.equal(users[2]);
       expect(collection.at(2)).to.equal(users[0]);
+      collection.move(2, 0);
+      expect(collection.at(0)).to.equal(users[0]);
+      expect(collection.at(1)).to.equal(users[1]);
+      expect(collection.at(2)).to.equal(users[2]);
     });
   });
   describe('.push()', function(){
@@ -137,7 +141,23 @@ describe('Collection', function(){
       expect(collection.toJSON()).to.eql([ user.toJSON(), user.toJSON() ]);
     });
   });
-  describe('resetting', function(){
+  describe('.reset()', function(){
+    it('should reset the collection', function(){
+      var collection = new Collection([
+        new User({ name: 'initial 1' }),
+        new User({ name: 'initial 2' })
+      ]);
+      collection.push(new User({ name: 'new 1' }));
+      collection.push(new User({ name: 'new 2' }));
+      collection.move(2, 3);
+      collection.move(1, 2);
+      collection.remove(0);
+      console.log(collection.toJSON());
+      collection.reset();
+      expect(collection.toJSON()).to.eql([ { name: 'initial 1' }, { name: 'initial 2' } ]);
+    });
+  });
+  describe('manual resetting', function(){
     it('should reset the dirty state after an resetting push', function(){
       var user = new User({ name: 'Test user' });
       var collection = new Collection([ user ]);
