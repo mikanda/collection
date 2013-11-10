@@ -196,9 +196,10 @@ function Collection(models, type) {
    */
 
   function clear() {
-    models.length = 0;
     this.each(function(model){
-      self.remove(self.indexOf(model));
+      setTimeout(function(){
+        self.remove(self.indexOf(model));
+      }, 0);
     });
     return this;
   };
